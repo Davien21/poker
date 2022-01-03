@@ -1,0 +1,94 @@
+.container {
+  height: 100vh;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--modal-z-index);
+  transition: all 0.5s ease-in-out;
+}
+
+.container {
+  display: none;
+}
+
+.container.active {
+  display: flex;
+}
+
+.container .modal-body {
+  margin: auto;
+  margin-top: 100px;
+  position: relative;
+  border-radius: 20px;
+  transition: all 0.5s ease-in-out;
+}
+
+.container.active .modal-body {
+  margin-top: 80px;
+}
+
+.total-credits .title {
+  border-radius: 10px 10px 0px 0px;
+  background-color: var(--app-green);
+}
+
+.bet-credits > div,
+.total-credits > div {
+  border-radius: 10px;
+}
+
+.bet-credits svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bet-credits button:disabled svg {
+  fill: rgba(0, 0, 0, 0.26);
+  stroke: rgba(0, 0, 0, 0.26);
+  transition: 0.5s ease-in-out;
+}
+
+.bet-credits button:not(:disabled):hover svg {
+  fill: #fff;
+  stroke: #fff;
+  transition: 0.5s ease-in-out;
+}
+
+.bet-credits,
+.total-credits {
+  width: 400px;
+}
+
+.bet-credits .title {
+  border-radius: 10px 10px 0px 0px;
+}
+
+.container .bet-credits .body {
+  position: relative;
+}
+
+button.reset-betting-credits:disabled {
+  display: none;
+}
+
+button.reset-betting-credits {
+  font-size: 0.8rem;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  padding: 5px 10px;
+  border: 1px solid var(--app-red);
+  border-radius: 5px;
+  transition: 0.2s;
+  color: var(--app-red);
+}
+
+button.reset-betting-credits:hover {
+  color: #fff;
+  background: var(--app-red);
+}

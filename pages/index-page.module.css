@@ -1,0 +1,88 @@
+.container {
+  height: 100vh;
+  background-image: url("../assets/images/jpgs/poker-king.jpg");
+}
+
+.container section:first-child {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.container h1 {
+  line-height: 3.5rem;
+  font-weight: 500;
+}
+
+.container h1 .gradient-text {
+  background: -webkit-linear-gradient(45deg, #09009f, #ec4899 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 550;
+}
+
+.container .digital-art {
+  position: relative;
+  max-height: 500px;
+  max-width: 220px;
+  border-radius: 10px;
+}
+
+.digital-art:hover button {
+  background-color: var(--app-purple);
+  color: #fff;
+}
+
+.digital-art img,
+.digital-art div {
+  height: 100%;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.container .digital-art::before {
+  z-index: 2;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #000;
+  opacity: 0.4;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.container .digital-art:last-child::before {
+  opacity: 0.7;
+}
+
+.container .digital-art:last-child:hover::before {
+  opacity: 0.8;
+}
+
+.digital-art:hover {
+  cursor: pointer;
+}
+
+.digital-art:hover::before {
+  opacity: 0.6;
+}
+
+.container .digital-art img {
+  object-fit: cover;
+  width: 100%;
+}
+
+.container .digital-art:last-child img {
+  object-fit: cover;
+}
+
+.stats :first-child {
+  background: -webkit-linear-gradient(45deg, #09009f, #ec4899 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* color: var(--app-purple); */
+}

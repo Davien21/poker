@@ -1,0 +1,1 @@
+export * as PokerAbi from "./PokerGame.json";

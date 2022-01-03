@@ -1,0 +1,32 @@
+.container {
+  position: sticky;
+  top: 0;
+  z-index: var(--header-z-index);
+  background-color: #f3f3f3;
+  backdrop-filter: blur(10px);
+  height: 70px;
+}
+
+.logo {
+  height: 40px;
+}
+
+
+.container ul li {
+  color: #000;
+}
+
+
+.container ul li a {
+  color: #000;
+  transition: all 0.1s ease-in-out;
+}
+
+
+.container ul li a:hover {
+  background: -webkit-linear-gradient(45deg, #09009f, #ec4899 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.1rem;
+}

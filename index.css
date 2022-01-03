@@ -1,0 +1,126 @@
+@tailwindcss /base;
+
+@tailwindcss /components;
+
+@tailwindcss /utilities;
+
+@import url(https://fonts.googleapis.com/css?family=Archivo:300,400,500,550,600,900);
+
+:root {
+  --app-purple: #7611f7;
+  --app-blue: #3079d8;
+  --app-red: #f84550;
+  --app-secondary-red: #f63e50;
+  --app-yellow: #e9ba42;
+  --app-grey: #999999;
+  --app-green: #03a65a;
+  --app-gray: #777e90;
+  --app-primary-text: archivo;
+  --app-border-radius-sm: 10px;
+  --app-border-radius-md: 15px;
+  --app-border-radius-lg: 30px;
+  --header-z-index: 1000;
+  --sidebar-z-index: 1500;
+  --form-z-index: 2000;
+  --overlay-z-index: 2000;
+  --modal-z-index: 2000;
+  --loader-z-index: 2500;
+  --toast-z-index: 2500;
+}
+
+* {
+  padding: 0px;
+  margin: 0px;
+  font-family: var(--app-primary-text), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+}
+
+body {
+  background: #f3f3f3;
+}
+
+*:not(*:hover, *:hover *) {
+  -webkit-transition: 0.1s all ease-in-out;
+  -o-transition: 0.1s all ease-in-out;
+  transition: 0.1s all ease-in-out;
+}
+
+*:focus {
+  transition: 0.1s all ease-in-out;
+  outline: 2px dotted;
+  outline-color: #000;
+  opacity: 1 !important;
+}
+
+ul,
+ol {
+  padding: 0px;
+  margin: 0px;
+}
+
+li {
+  list-style: none;
+}
+
+hr.hr-sm {
+  border-top: 1px solid #c2c2c2;
+}
+
+hr.hr-lg {
+  border-top: 4px solid #e4e4e4;
+}
+
+select {
+  padding: 6px 12px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.app-text-grey {
+  color: var(--app-grey);
+}
+
+.ant-select {
+  width: 100%;
+}
+
+.ant-select-selector {
+  border-radius: 5px !important;
+}
+
+.ant-select-dropdown {
+  z-index: var(--sidebar-z-index);
+}
+
+.gradient-text {
+  background: -webkit-linear-gradient(45deg, #09009f, #ec4899 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.width-auto {
+  width: auto !important;
+}
+
+.ant-select-selection-item {
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.purple-text {
+  color: var(--app-purple);
+}
+
+.red-text {
+  color: var(--app-red);
+}
+
+
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-color: #e4e4e4;
+}

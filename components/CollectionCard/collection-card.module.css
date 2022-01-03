@@ -1,0 +1,61 @@
+.container {
+  background-color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.container:hover {
+  box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+  box-shadow: 0px 0px 15px rgb(0 0 0 / 20%);
+  /* transition: all 0.1s ease 0s; */
+  margin-top: -3px;
+}
+
+.container .nft-image img {
+  border-radius: 10px 10px 0px 0px !important;
+  object-fit: contain;
+  width: 100%;
+  margin: auto;
+  max-width: 320px;
+}
+
+.container .nft-image {
+  overflow: hidden;
+  border-radius: 10px 10px 0px 0px !important;
+}
+
+.container .currency-icon.eth path:nth-child(1),
+.container .currency-icon.eth path:nth-child(3),
+.container .currency-icon.eth path:nth-child(5) {
+  fill: #343434;
+}
+
+.container .currency-icon.eth path:nth-child(2) {
+  fill: #8c8c8c;
+}
+
+.container .currency-icon.eth path:nth-child(4) {
+  fill: #141414;
+}
+
+.container hr {
+  border-top: 1px solid #e6e8ec;
+}
+
+.container span {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.container span.name {
+  word-break: break-all;
+  color: #000;
+}
+
+.container:hover img {
+  transform: scale(1.07);
+}
+
+.container * {
+  transition: all 0.5s ease-in-out;
+}
