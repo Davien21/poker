@@ -7,13 +7,14 @@ export const connectToMetaMask = async (setError) => {
   try {
     if (!hasEthereum()) return false;
 
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-
-    return true;
+    const address = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    return address;
   } catch (error) {
     console.log(error);
     if (setError) setError(error.message ?? error.toString());
-    return { error };
+    return false;
   }
 };
 

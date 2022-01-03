@@ -4,6 +4,7 @@ import {
   getCurrentNetwork,
   hasEthereum,
   getPokerGameContract,
+  getActiveWallet,
 } from "./web3Service";
 import { ethers } from "ethers";
 
@@ -196,23 +197,93 @@ const determineWinner = (playerHand, dealerHand) => {
   };
 };
 
-async function logContract() {
-  try {
-    if (!hasEthereum()) return false;
-    const network = await getCurrentNetwork();
-    if (network && network !== "maticmum")
-      throw new Error("Please use Mumbai Testnet");
+async function getGameDetails() {
+  if (!hasEthereum()) return false;
+  const network = await getCurrentNetwork();
+  if (network && network !== "maticmum")
+    throw new Error("Please use Mumbai Testnet");
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
 
-    const pokerContract = await getPokerGameContract(signer);
-    console.log(pokerContract);
-    // const address = getActiveWallet();
+  const pokerContract = await getPokerGameContract(signer);
+  console.log(pokerContract);
+  let [
+    playerCurrentAmount,
+    dealerCurrentAmount,
+    playerCurrentHand,
+    dealerCurrentHand,
+    playerIPFSDetails,
+  ] = await pokerContract.getGameDetails();
 
-    // return await pokerContract?.isRegistered(address);
-  } catch (err) {
-    console.log("Something went wrong", err);
-  }
+  playerCurrentAmount = parseInt(playerCurrentAmount.toString());
+  dealerCurrentAmount = parseInt(dealerCurrentAmount.toString());
+
+  return {
+    playerCurrentAmount,
+    dealerCurrentAmount,
+    playerCurrentHand,
+    dealerCurrentHand,
+    playerIPFSDetails,
+  };
 }
-export { generateHand, determineWinner, decodeHand, logContract };
+
+async function setPlayerAmount(amount) {
+  if (!hasEthereum()) return false;
+  const network = await getCurrentNetwork();
+  if (network && network !== "maticmum")
+    throw new Error("Please use Mumbai Testnet");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const pokerContract = await getPokerGameContract(signer);
+  return await pokerContract.setAmount(amount);
+}
+
+async function placeBet(amount) {
+  if (!hasEthereum()) return false;
+  const network = await getCurrentNetwork();
+  if (network && network !== "maticmum")
+    throw new Error("Please use Mumbai Testnet");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const pokerContract = await getPokerGameContract(signer);
+  // await pokerContract.placeBet(amount);
+  await generatePlayerHand();
+}
+
+async function generatePlayerHand() {
+  if (!hasEthereum()) return false;
+  const network = await getCurrentNetwork();
+  if (network && network !== "maticmum")
+    throw new Error("Please use Mumbai Testnet");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const pokerContract = await getPokerGameContract(signer);
+
+  const gasPrice = parseInt((await provider.getGasPrice()).toString());
+  console.log({ gasPrice });
+  const estimation = await pokerContract.estimateGas.generatePlayerHand();
+  console.log(estimation);
+
+  await pokerContract.generatePlayerHand({
+    gasPrice: 1000000000,
+    gasLimit: 12000000,
+  });
+  await pokerContract.on("CardHand", async (hands) => {
+    console.log({ hands });
+  });
+}
+
+export {
+  generateHand,
+  determineWinner,
+  decodeHand,
+  setPlayerAmount,
+  getGameDetails,
+  placeBet,
+};

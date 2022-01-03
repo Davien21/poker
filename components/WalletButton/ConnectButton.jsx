@@ -1,13 +1,12 @@
-import { Button } from "../index";
+import { Button } from "../../components";
+
 import styles from "./connect-button.module.css";
-// import { useAppContext } from "../../contexts/appContext";
+import { useAppContext } from "../../contexts/appContext";
+import { WalletIcon } from "../../assets/images";
 
 function ConnectButton() {
   const loading = false;
-  const { handleWalletConnect, hasMetaMask } = {
-    handleWalletConnect: () => alert("Connected!"),
-    hasMetaMask: true,
-  };
+  const { handleWalletConnect, hasMetaMask } = useAppContext();
 
   async function connect() {
     const connectionStatus = await handleWalletConnect();
@@ -15,7 +14,7 @@ function ConnectButton() {
   }
 
   return (
-    <div className={styles["container"]}>
+    <div>
       {!hasMetaMask && (
         <div className="">
           <a
@@ -29,13 +28,10 @@ function ConnectButton() {
         </div>
       )}
       {hasMetaMask && (
-        <button
-          onClick={connect}
-          disabled={loading}
-          className={`${styles["connect-btn"]} btn shadow-l`}
-        >
-          <span className="d-none d-md-block">Connect Wallet</span>
-        </button>
+        <Button onClick={connect} disabled={loading}>
+          <span className="hidden md:block">Connect Wallet</span>
+          <WalletIcon className={`${styles["wallet-icon"]} md:hidden`} />
+        </Button>
       )}
     </div>
   );

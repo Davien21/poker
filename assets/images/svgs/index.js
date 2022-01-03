@@ -13,6 +13,7 @@ import CurrencyIcon from "./currency.svg";
 import FilterIcon from "./filter.svg";
 import FilterCloseIcon from "./filter-close.svg";
 import EmptySearchIcon from "./empty-search.svg";
+import ArrowDownIcon from "./arrowDown.svg";
 
 export {
   LogoIcon,
@@ -30,4 +31,5 @@ export {
   FilterCloseIcon,
   EmptySearchIcon,
   PlusIcon,
+  ArrowDownIcon,
 };

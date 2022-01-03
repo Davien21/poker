@@ -1,52 +1,17 @@
 .container {
-  position: relative;
-  overflow: hidden;
-  color: #fff;
-  background-color: var(--app-purple);
-  width: 100%;
-  min-width: 163px;
-  border-radius: 5px;
-  padding: 8px 20px;
-  text-align: center;
-}
-
-@media screen and (min-width: 993px) {
-  .container {
-    padding: 5px 20px;
-  }
-}
-
-.container:hover {
-  color: #fff;
-}
-
-.container:not(:disabled)::before {
-  content: "";
-  display: block;
-  position: absolute;
-  background: rgba(255, 255, 255, 0.5);
-  width: 70px;
-  height: 100%;
+  /* box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15); */
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(228, 241, 253, 0.56);
+  backdrop-filter: blur(4px);
+  position: sticky;
+  z-index: 1;
   top: 0;
-  filter: blur(15px);
-  transform: translateX(-170px) skewX(-15deg);
+  padding: 20px 0px;
 }
 
-.container:not(:disabled)::after {
-  content: "";
-  display: block;
-  position: absolute;
-  background: rgba(255, 255, 255, 0.4);
-  width: 50px;
-  height: 100%;
-  top: 0;
-  filter: blur(15px);
-  transform: translateX(-170px) skewX(-15deg);
+svg.wallet-icon,
+svg.wallet-icon path {
+  fill: #fff;
+  stroke: #fff;
 }
-
-.container:not(:disabled):hover::before,
-.container:not(:disabled):hover::after {
-  transform: translateX(280px) skewX(-15deg);
-  transition: 1s;
-}
-

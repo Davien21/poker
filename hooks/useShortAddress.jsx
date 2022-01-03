@@ -7,9 +7,14 @@ const smallCutText = (text) =>
   `${text.substring(0, 3)}...${text.substring(text.length - 2)}`;
 
 function useShortAddress(address) {
-  if (!address) address = "********";
+  const [shortForm, setShortForm] = useState("******");
+  if (!address) return "DISCONNECTED";
+  useEffect(() => {
+    if (window.innerWidth >= 768) setShortForm(largeCutText(address));
+    if (window.innerWidth < 768) setShortForm(smallCutText(address));
+  }, [address]);
 
-  largeCutText(address);
+  return shortForm;
 }
 
 export { useShortAddress };

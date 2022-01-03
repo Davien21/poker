@@ -3,21 +3,24 @@ import { useState } from "react";
 
 import styles from "./play.module.css";
 import { PlusIcon } from "../../assets/images";
-import { PokerCard, Button, ConfettiShower } from "../../components";
-import OptionsModal from "./components/OptionsModal";
 import {
-  generateHand,
-  decodeHand,
-  logContract,
-} from "../../services/pokerService";
+  PokerCard,
+  Button,
+  ConfettiShower,
+  WalletButton,
+} from "../../components";
+import OptionsModal from "./components/OptionsModal";
+import { generateHand, decodeHand } from "../../services/pokerService";
 import { hiddenHand } from "../../utils/constants";
 import useBannerMessage from "./hooks/useBannerMessage";
 import banner from "../../utils/bannerConfig";
 import { useEffect } from "react";
-import { useCallback } from "react";
 import usePokerContract from "../../hooks/usePokerService";
+import { useAppContext } from "../../contexts/appContext";
+import { toast } from "react-toastify";
 
 function PlayPage(props) {
+  const { isConnected, setHasGameData, hasGameData } = useAppContext();
   const [playerHand, setPlayerHand] = useState(hiddenHand);
   const [dealerHand, setDealerHand] = useState(hiddenHand);
   const [amount, setAmount] = useState(null);
@@ -33,13 +36,17 @@ function PlayPage(props) {
   const [shouldOpenModal, setShouldOpenModal] = useState(false);
 
   const cannotSetBid = isPlaying || !playerCreditsLeft || !dealerCreditsLeft;
-
-  const handleSelectAmount = (amount) => {
-    setAmount(amount);
-    setPlayerCreditsLeft(amount);
-    setPlayerBalance(amount);
-    setDealerCreditsLeft(amount);
-    setDealerBalance(amount);
+  const { getGameInfo, setGameCredits, placeBid } = usePokerContract();
+  const handleSelectAmount = async (amount) => {
+    const didSetAmount = await setGameCredits(amount);
+    if (didSetAmount) {
+      toast.success(`Game Credits set to $${amount}`);
+      setAmount(amount);
+      setPlayerCreditsLeft(amount);
+      setPlayerBalance(amount);
+      setDealerCreditsLeft(amount);
+      setDealerBalance(amount);
+    }
   };
 
   const makeBid = (bid) => {
@@ -63,14 +70,17 @@ function PlayPage(props) {
     if (!hasPlayed) setHasPlayed(true);
   };
 
-  const placeBet = () => {
-    const canBet = playerBalance - bid < 0 || dealerBalance - bid < 0;
-    if (canBet) return;
-    setIsPlaying(true);
-    setPlayerBalance((value) => (value -= bid));
-    setDealerBalance((value) => (value -= bid));
-    const playerHand = decodeHand(generateHand());
-    setPlayerHand(playerHand);
+  const placeBet = async () => {
+    const didPlaceBid = await placeBid(bid);
+    if (didPlaceBid) {
+      const canBet = playerBalance - bid < 0 || dealerBalance - bid < 0;
+      if (canBet) return;
+      setIsPlaying(true);
+      setPlayerBalance((value) => (value -= bid));
+      setDealerBalance((value) => (value -= bid));
+      const playerHand = decodeHand(generateHand());
+      setPlayerHand(playerHand);
+    }
   };
 
   const rewardWinner = (winner) => {
@@ -100,12 +110,23 @@ function PlayPage(props) {
     });
   };
 
+  const setupGame = async () => {
+    const { playerCurrentAmount, dealerCurrentAmount } = await getGameInfo();
+    setAmount(playerCurrentAmount);
+    setPlayerCreditsLeft(playerCurrentAmount);
+    setDealerCreditsLeft(dealerCurrentAmount);
+  };
+
   useEffect(() => {
-    (async function () {
-      console.log("a");
-      window.ethereum ? await logContract() : "";
-    })();
-  });
+    if (!hasGameData) {
+      (async function () {
+        if (window.ethereum) {
+          await setupGame();
+          setHasGameData(true);
+        }
+      })();
+    }
+  }, [hasGameData]);
 
   useEffect(() => {
     if (playerBalance && !isPlaying && playerBalance !== amount) {
@@ -155,7 +176,24 @@ function PlayPage(props) {
           </div>
         </section>
 
-        {!amount && (
+        {!isConnected && (
+          <section className={`hidden md:flex ${styles["select-amount"]} `}>
+            <div className={`bg-white`}>
+              <div className={`${styles["title"]} bg-purple-700`}>
+                <div
+                  className={`${styles["title"]} text-white text-center px-2 py-5 text-base`}
+                >
+                  Please Connect to Meta Mask
+                </div>
+              </div>
+              <div className={`${styles["body"]} flex py-5 justify-center`}>
+                <WalletButton />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {isConnected && hasGameData && !amount && (
           <section className={`hidden md:flex ${styles["select-amount"]} `}>
             <div className={`bg-white`}>
               <div className={`${styles["title"]} bg-purple-700`}>
@@ -182,6 +220,7 @@ function PlayPage(props) {
             </div>
           </section>
         )}
+
         {amount && (
           <section className="hidden md:block container">
             <div className="flex justify-between  xl:grid-cols-7">
