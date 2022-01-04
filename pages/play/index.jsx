@@ -226,7 +226,7 @@ function PlayPage(props) {
           </section>
         )}
 
-        {amount && (
+        {amount > 0 && (
           <section className="hidden md:block container">
             <div className="flex justify-between  xl:grid-cols-7">
               <div className="xl:col-span-5 mx-auto xl:mx-0">
