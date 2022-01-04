@@ -93,11 +93,11 @@ function PlayPage(props) {
     if (playerWon) setHasWon(true);
   };
 
-  const RevealDealerHand = () => {
+  const revealDealerHand = () => {
     setDealerHand(hiddenDealerHand);
     const { message, type, winner } = useBannerMessage({
-      playerHand: playerHand || hiddenHand,
-      dealerHand: dealerHand || hiddenHand,
+      playerHand: playerHand,
+      dealerHand: dealerHand,
     });
 
     rewardWinner(winner);
@@ -245,7 +245,7 @@ function PlayPage(props) {
                           <Button
                             disabled={!bid}
                             className="text-xl"
-                            onClick={RevealDealerHand}
+                            onClick={revealDealerHand}
                           >
                             Continue
                           </Button>
@@ -292,7 +292,7 @@ function PlayPage(props) {
                       playerCreditsLeft,
                       dealerCreditsLeft,
                       placeBet,
-                      RevealDealerHand,
+                      revealDealerHand,
                       hasPlayed,
                       hasWonBet,
                       cannotSetBid,
@@ -410,7 +410,7 @@ function PlayPage(props) {
                     <Button
                       disabled={!bid}
                       className="text-xl"
-                      onClick={RevealDealerHand}
+                      onClick={revealDealerHand}
                     >
                       Continue
                     </Button>
