@@ -7,6 +7,7 @@ import {
   getActiveWallet,
 } from "./web3Service";
 import { ethers } from "ethers";
+import { saveJSONToIPFS } from "./ipfs";
 
 const decodeHand = (encodedHand) => {
   let hand = [];
@@ -251,11 +252,29 @@ async function placeBet(amount) {
   const signer = provider.getSigner();
 
   const pokerContract = await getPokerGameContract(signer);
-  // await pokerContract.placeBet(amount);
-  await generatePlayerHand();
+  await pokerContract.placeBet(amount);
 }
 
-async function generatePlayerHand() {
+async function saveHands() {
+  if (!hasEthereum()) return false;
+  const network = await getCurrentNetwork();
+  if (network && network !== "maticmum")
+    throw new Error("Please use Mumbai Testnet");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const pokerContract = await getPokerGameContract(signer);
+  const playerHand = generateHand();
+  const dealerHand = generateHand();
+  let handsHash = await saveJSONToIPFS({ playerHand, dealerHand });
+  handsHash = handsHash.data.IpfsHash;
+
+  await pokerContract.setHand(handsHash, handsHash);
+  console.log({ playerHand, dealerHand });
+  return { playerHand, dealerHand };
+}
+
+async function rewardWinner(winner) {
   if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
   if (network && network !== "maticmum")
@@ -265,18 +284,9 @@ async function generatePlayerHand() {
   const signer = provider.getSigner();
   const pokerContract = await getPokerGameContract(signer);
 
-  const gasPrice = parseInt((await provider.getGasPrice()).toString());
-  console.log({ gasPrice });
-  const estimation = await pokerContract.estimateGas.generatePlayerHand();
-  console.log(estimation);
-
-  await pokerContract.generatePlayerHand({
-    gasPrice: 1000000000,
-    gasLimit: 12000000,
-  });
-  await pokerContract.on("CardHand", async (hands) => {
-    console.log({ hands });
-  });
+  await pokerContract.rewardWinner(winner);
+  console.log({ playerHand, dealerHand });
+  return { playerHand, dealerHand };
 }
 
 export {
@@ -286,4 +296,6 @@ export {
   setPlayerAmount,
   getGameDetails,
   placeBet,
+  saveHands,
+  rewardWinner,
 };

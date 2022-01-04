@@ -13,15 +13,15 @@
       "inputs": [
         {
           "indexed": false,
-          "internalType": "string[]",
+          "internalType": "string",
           "name": "playerHand",
-          "type": "string[]"
+          "type": "string"
         },
         {
           "indexed": false,
-          "internalType": "string[]",
+          "internalType": "string",
           "name": "dealerHand",
-          "type": "string[]"
+          "type": "string"
         }
       ],
       "name": "AllHands",
@@ -32,9 +32,9 @@
       "inputs": [
         {
           "indexed": false,
-          "internalType": "string[]",
+          "internalType": "string",
           "name": "hand",
-          "type": "string[]"
+          "type": "string"
         }
       ],
       "name": "CardHand",
@@ -131,20 +131,6 @@
     },
     {
       "inputs": [],
-      "name": "generateDealerHand",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "generatePlayerHand",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "getApprovedAmount",
       "outputs": [
         {
@@ -176,14 +162,14 @@
           "type": "uint256"
         },
         {
-          "internalType": "string[]",
+          "internalType": "string",
           "name": "",
-          "type": "string[]"
+          "type": "string"
         },
         {
-          "internalType": "string[]",
+          "internalType": "string",
           "name": "",
-          "type": "string[]"
+          "type": "string"
         },
         {
           "internalType": "string",
@@ -276,6 +262,24 @@
       "name": "setAmount",
       "outputs": [],
       "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_playerHand",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_dealerHand",
+          "type": "string"
+        }
+      ],
+      "name": "setHand",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {

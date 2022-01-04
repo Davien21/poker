@@ -114,7 +114,7 @@ const hiddenHand = (() => {
   return hand;
 })();
 
-const pokerContractAddress = "0xAabbc51d451e6d67cAF8e0aFdD26864b44961969";
+const pokerContractAddress = "0x059b251Ca2eC375935b4DAD9dc318143Bfcfba5d";
 
 export {
   ranks,

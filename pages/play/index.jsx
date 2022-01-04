@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 function PlayPage(props) {
   const { isConnected, setHasGameData, hasGameData } = useAppContext();
   const [playerHand, setPlayerHand] = useState(hiddenHand);
+  const [hiddenDealerHand, setHiddenDealerHand] = useState(null);
   const [dealerHand, setDealerHand] = useState(hiddenHand);
   const [amount, setAmount] = useState(null);
   const [playerCreditsLeft, setPlayerCreditsLeft] = useState(amount);
@@ -36,7 +37,8 @@ function PlayPage(props) {
   const [shouldOpenModal, setShouldOpenModal] = useState(false);
 
   const cannotSetBid = isPlaying || !playerCreditsLeft || !dealerCreditsLeft;
-  const { getGameInfo, setGameCredits, placeBid } = usePokerContract();
+  const { getGameInfo, setGameCredits, placeBid, generateHands, giveReward } =
+    usePokerContract();
   const handleSelectAmount = async (amount) => {
     const didSetAmount = await setGameCredits(amount);
     if (didSetAmount) {
@@ -71,15 +73,17 @@ function PlayPage(props) {
   };
 
   const placeBet = async () => {
+    console.log({ playerBalance, bid, dealerBalance });
+    const canBet = playerBalance - bid < 0 || dealerBalance - bid < 0;
+    if (canBet) return toast.error("Invalid Bid");
     const didPlaceBid = await placeBid(bid);
     if (didPlaceBid) {
-      const canBet = playerBalance - bid < 0 || dealerBalance - bid < 0;
-      if (canBet) return;
+      let { playerHand, dealerHand } = await generateHands();
       setIsPlaying(true);
       setPlayerBalance((value) => (value -= bid));
       setDealerBalance((value) => (value -= bid));
-      const playerHand = decodeHand(generateHand());
       setPlayerHand(playerHand);
+      setHiddenDealerHand(dealerHand);
     }
   };
 
@@ -91,8 +95,7 @@ function PlayPage(props) {
   };
 
   const revealDealerHand = () => {
-    const dealerHand = decodeHand(generateHand());
-    setDealerHand(dealerHand);
+    setDealerHand(hiddenDealerHand);
 
     const { message, type, winner } = useBannerMessage({
       playerHand,
@@ -113,7 +116,9 @@ function PlayPage(props) {
   const setupGame = async () => {
     const { playerCurrentAmount, dealerCurrentAmount } = await getGameInfo();
     setAmount(playerCurrentAmount);
+    setPlayerBalance(playerCurrentAmount);
     setPlayerCreditsLeft(playerCurrentAmount);
+    setDealerBalance(playerCurrentAmount);
     setDealerCreditsLeft(dealerCurrentAmount);
   };
 
