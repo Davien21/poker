@@ -45,7 +45,8 @@ const getRandomCard = () => {
 };
 
 function isRoyalFlush(hand) {
-  hand = hand.map((item) => (item = item.denomination));
+  if (!hand) return false;
+  hand = hand.map((item) => (item = item?.denomination));
   const royalFlushValues = ["K", "Q", "J", "A"];
   for (let i = 0; i < royalFlushValues.length; i++) {
     if (!hand.includes(royalFlushValues[i])) return false;
@@ -54,6 +55,7 @@ function isRoyalFlush(hand) {
 }
 
 function isStraightFlush(hand) {
+  if (!hand) return false;
   for (let i = 0; i < hand.length; i++) {
     if (i === hand.length - 1) break;
     if (hand[i].suit !== hand[i + 1].suit) return false;
@@ -64,6 +66,7 @@ function isStraightFlush(hand) {
 }
 
 function isFourOfAKind(hand) {
+  if (!hand) return false;
   hand = hand.map((item) => (item = item.denomination));
 
   let denominationCounts = {};
@@ -78,6 +81,7 @@ function isFourOfAKind(hand) {
 }
 
 function isFullHouse(hand) {
+  if (!hand) return false;
   hand = hand.map((item) => (item = item.denomination));
 
   let denominationCounts = {};
@@ -93,6 +97,7 @@ function isFullHouse(hand) {
 }
 
 function isFlush(hand) {
+  if (!hand) return false;
   for (let i = 0; i < hand.length; i++) {
     if (i === hand.length - 1) break;
     if (hand[i].suit !== hand[i + 1].suit) return false;
@@ -101,6 +106,7 @@ function isFlush(hand) {
 }
 
 function isStraight(hand) {
+  if (!hand) return false;
   for (let i = 0; i < hand.length; i++) {
     if (i === hand.length - 1) break;
     if (points[hand[i].denomination] + 1 !== points[hand[i + 1].denomination])
@@ -110,6 +116,7 @@ function isStraight(hand) {
 }
 
 function isThreeofAKind(hand) {
+  if (!hand) return false;
   hand = hand.map((item) => (item = item.denomination));
 
   let denominationCounts = {};
@@ -125,6 +132,7 @@ function isThreeofAKind(hand) {
 }
 
 function isTwoPairs(hand) {
+  if (!hand) return false;
   hand = hand.map((item) => (item = item.denomination));
 
   let denominationCounts = {};
@@ -140,6 +148,7 @@ function isTwoPairs(hand) {
 }
 
 function isPair(hand) {
+  if (!hand) return false;
   hand = hand.sort((a, b) => points[b.denomination] - points[a.denomination]);
 
   for (let i = 0; i < hand.length; i++) {
