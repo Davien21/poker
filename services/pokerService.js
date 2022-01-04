@@ -1,4 +1,10 @@
-import { denominations, points, suits, ranks, hiddenHand } from "../utils/constants";
+import {
+  denominations,
+  points,
+  suits,
+  ranks,
+  hiddenHand,
+} from "../utils/constants";
 import { nanoid } from "nanoid";
 import {
   getCurrentNetwork,
@@ -46,7 +52,7 @@ const getRandomCard = () => {
 
 function isRoyalFlush(hand) {
   if (!hand) hand = hiddenHand;
-  hand = hand.map((item) => (item = item?.denomination));
+  hand = hand.map((item) => (item = item.denomination));
   const royalFlushValues = ["K", "Q", "J", "A"];
   for (let i = 0; i < royalFlushValues.length; i++) {
     if (!hand.includes(royalFlushValues[i])) return false;
@@ -172,6 +178,12 @@ const pokerHands = [
 ];
 
 const determineWinner = (playerHand, dealerHand) => {
+  if (!playerHand && !dealerHand)
+    return {
+      playerRank: "",
+      dealerRank: "",
+      winner: "",
+    };
   let playerRank;
   let dealerRank;
   let winner;
