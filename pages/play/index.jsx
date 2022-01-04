@@ -11,7 +11,6 @@ import {
 } from "../../components";
 import OptionsModal from "./components/OptionsModal";
 import { hiddenHand } from "../../utils/constants";
-import useBannerMessage from "./hooks/useBannerMessage";
 import banner from "../../utils/bannerConfig";
 import { useEffect } from "react";
 import usePokerContract from "../../hooks/usePokerService";
