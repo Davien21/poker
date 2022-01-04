@@ -31,7 +31,7 @@ function useBannerMessage({ playerHand, dealerHand }) {
       {status !== "Tie" && !winner.includes("tie") && (
         <>
           <span className="mr-1">
-            hand!, which is {playerRankStatus} ranked than the Dealer's
+            hand!, which is {playerRankStatus} ranked than the {`Dealer's`}
           </span>
           <span className="underline">{dealerRank}</span>
         </>

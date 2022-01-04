@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import styles from "./play.module.css";
 import { PlusIcon } from "../../assets/images";
@@ -10,7 +10,6 @@ import {
   WalletButton,
 } from "../../components";
 import OptionsModal from "./components/OptionsModal";
-import { generateHand, decodeHand } from "../../services/pokerService";
 import { hiddenHand } from "../../utils/constants";
 import useBannerMessage from "./hooks/useBannerMessage";
 import banner from "../../utils/bannerConfig";
@@ -94,12 +93,11 @@ function PlayPage(props) {
     if (playerWon) setHasWon(true);
   };
 
-  const revealDealerHand = () => {
+  const RevealDealerHand = () => {
     setDealerHand(hiddenDealerHand);
-
     const { message, type, winner } = useBannerMessage({
-      playerHand,
-      dealerHand,
+      playerHand: playerHand || hiddenHand,
+      dealerHand: dealerHand || hiddenHand,
     });
 
     rewardWinner(winner);
@@ -113,14 +111,14 @@ function PlayPage(props) {
     });
   };
 
-  const setupGame = async () => {
+  const setupGame = useCallback(async () => {
     const { playerCurrentAmount, dealerCurrentAmount } = await getGameInfo();
     setAmount(playerCurrentAmount);
     setPlayerBalance(playerCurrentAmount);
     setPlayerCreditsLeft(playerCurrentAmount);
     setDealerBalance(playerCurrentAmount);
     setDealerCreditsLeft(dealerCurrentAmount);
-  };
+  }, [getGameInfo]);
 
   useEffect(() => {
     if (!hasGameData) {
@@ -131,25 +129,25 @@ function PlayPage(props) {
         }
       })();
     }
-  }, [hasGameData]);
+  }, [hasGameData, setHasGameData, setupGame]);
 
   useEffect(() => {
     if (playerBalance && !isPlaying && playerBalance !== amount) {
       setPlayerCreditsLeft(playerBalance);
     }
-  }, [playerBalance, isPlaying]);
+  }, [playerBalance, isPlaying, amount]);
 
   useEffect(() => {
     if (dealerBalance && !isPlaying && dealerBalance !== amount) {
       setDealerCreditsLeft(dealerBalance);
     }
-  }, [dealerBalance, isPlaying]);
+  }, [amount, dealerBalance, isPlaying]);
 
   useEffect(() => {
     if (playerBalance === 0 || dealerBalance === 0) {
       setIsGameOver(true);
     }
-  }, []);
+  }, [dealerBalance, playerBalance]);
 
   return (
     <>
@@ -172,7 +170,7 @@ function PlayPage(props) {
               <div
                 className={`${styles["title"]} text-white text-center px-2 py-5 text-base`}
               >
-                Oops... Looks like there's a problem 😢
+                {`Oops... Looks like there's a problem 😢`}
               </div>
             </div>
             <div className={`${styles["body"]} flex p-10`}>
@@ -247,7 +245,7 @@ function PlayPage(props) {
                           <Button
                             disabled={!bid}
                             className="text-xl"
-                            onClick={revealDealerHand}
+                            onClick={RevealDealerHand}
                           >
                             Continue
                           </Button>
@@ -257,7 +255,7 @@ function PlayPage(props) {
                     <div
                       className={`${styles["hand-title"]} px-5 py-4 text-2xl text-center`}
                     >
-                      Dealer's Hand
+                      {`Dealer's Hand`}
                     </div>
                     <div className="flex justify-between">
                       {dealerHand.map((card, index) => (
@@ -274,7 +272,7 @@ function PlayPage(props) {
                     <div
                       className={`${styles["hand-title"]} px-5 py-4 text-2xl text-center`}
                     >
-                      Player's Hand
+                      {`Player's Hand`}
                     </div>
                     <div className="flex justify-between">
                       {playerHand.map((card, index) => (
@@ -294,7 +292,7 @@ function PlayPage(props) {
                       playerCreditsLeft,
                       dealerCreditsLeft,
                       placeBet,
-                      revealDealerHand,
+                      RevealDealerHand,
                       hasPlayed,
                       hasWonBet,
                       cannotSetBid,
@@ -379,7 +377,7 @@ function PlayPage(props) {
                     <div className={`${styles["body"]} p-4 text-center`}>
                       <div className="text-xl ">
                         <span className="mr-4 text-gray-500">
-                          Dealer's Balance:
+                          {`Dealer's Balance:`}
                         </span>
                         <span className="gradienttext font-medium">
                           ${dealerCreditsLeft}
@@ -388,7 +386,7 @@ function PlayPage(props) {
                       <hr className="bg-gray-200" />
                       <div className="text-xl ">
                         <span className="mr-4 text-gray-500">
-                          Player's Balance:
+                          {`Player's Balance:`}
                         </span>
                         <span className="gradienttext font-medium">
                           ${playerCreditsLeft}
@@ -412,7 +410,7 @@ function PlayPage(props) {
                     <Button
                       disabled={!bid}
                       className="text-xl"
-                      onClick={revealDealerHand}
+                      onClick={RevealDealerHand}
                     >
                       Continue
                     </Button>

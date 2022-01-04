@@ -77,7 +77,7 @@ function IndexPage() {
                   A beautiful game of poker on the Blockchain.
                 </p>
                 <div className="flex">
-                  <Link href="/play">
+                  <Link passHref href="/play">
                     <div className={`${styles["digital-art"]} mr-4`}>
                       <div className="flex-1 absolute px-4 z-10 w-full">
                         <div className="w-full flex items-center">
@@ -87,6 +87,7 @@ function IndexPage() {
                         </div>
                       </div>
                       <Image
+                        alt=""
                         className={styles["images"]}
                         src={pokerArt1}
                         width={640}
@@ -94,7 +95,7 @@ function IndexPage() {
                       />
                     </div>
                   </Link>
-                  <Link href="/rules">
+                  <Link passHref href="/rules">
                     <div className={`${styles["digital-art"]} `}>
                       <div className="flex-1 absolute px-4 z-10 w-full">
                         <div className="w-full flex items-center">
@@ -103,7 +104,7 @@ function IndexPage() {
                           </Button>
                         </div>
                       </div>
-                      <Image src={pokerArt3} width={640} height={960} />
+                      <Image alt="" src={pokerArt3} width={640} height={960} />
                     </div>
                   </Link>
                 </div>

@@ -1,21 +1,9 @@
 import { useEffect } from "react";
 import { PlusIcon } from "../../../../assets/images";
-import { Button, CloseButton } from "../../../../components";
+import { Button } from "../../../../components";
 import styles from "./options-modal.module.css";
 
 function OptionsModal({ gameState, isOpen, setIsOpen }) {
-  const {
-    playerCreditsLeft,
-    cannotSetBid,
-    placeBet,
-    revealDealerHand,
-    hasPlayed,
-    isPlaying,
-    makeBid,
-    resetBid,
-    bid,
-    dealerCreditsLeft,
-  } = gameState;
   isOpen = true;
   let containerClass = `${styles["container"]}`;
   if (isOpen) containerClass += ` ${styles["active"]}`;
@@ -30,6 +18,18 @@ function OptionsModal({ gameState, isOpen, setIsOpen }) {
       document.body.style.overflow = "auto";
     };
   }, [isOpen, setIsOpen]);
+  if (!gameState) return <div></div>;
+  const {
+    playerCreditsLeft,
+    cannotSetBid,
+    placeBet,
+    revealDealerHand,
+    isPlaying,
+    makeBid,
+    resetBid,
+    bid,
+    dealerCreditsLeft,
+  } = gameState;
 
   return (
     <div className={containerClass} onClick={closeModal}>
@@ -106,14 +106,14 @@ function OptionsModal({ gameState, isOpen, setIsOpen }) {
             </div>
             <div className={`${styles["body"]} p-4 text-center`}>
               <div className="text-xl ">
-                <span className="mr-4 text-gray-500">Dealer's Balance:</span>
+                <span className="mr-4 text-gray-500">{`Dealer's Balance:`}</span>
                 <span className="gradienttext font-medium">
                   ${dealerCreditsLeft}
                 </span>
               </div>
               <hr className="bg-gray-200" />
               <div className="text-xl ">
-                <span className="mr-4 text-gray-500">Player's Balance:</span>
+                <span className="mr-4 text-gray-500">{`Player's Balance:`}</span>
                 <span className="gradienttext font-medium">
                   ${playerCreditsLeft}
                 </span>
