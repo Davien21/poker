@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 function PlayPage(props) {
   const { isConnected, setHasGameData, hasGameData } = useAppContext();
   const [playerHand, setPlayerHand] = useState(hiddenHand);
-  const [hiddenDealerHand, setHiddenDealerHand] = useState(null);
+  const [hiddenDealerHand, setHiddenDealerHand] = useState(hiddenHand);
   const [dealerHand, setDealerHand] = useState(hiddenHand);
   const [amount, setAmount] = useState(null);
   const [playerCreditsLeft, setPlayerCreditsLeft] = useState(amount);
