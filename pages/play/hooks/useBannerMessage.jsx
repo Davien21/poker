@@ -2,19 +2,14 @@ import React from "react";
 import { determineWinner } from "../../../services/pokerService";
 import banner from "../../../utils/bannerConfig";
 
-function useBannerMessage({ playerHand, dealerHand }) {
-  const outcome = determineWinner(playerHand, dealerHand);
-  const { playerRank, dealerRank, winner } = outcome;
-  console.log(outcome);
-  let status = winner.includes("player") ? "Won" : "Lost";
-
-  if (winner.includes("player") === "player") status = "Won";
-  if (winner === "dealer") status = "Lost";
-  if (winner === "tie") status = "Tied";
-
-  let playerRankStatus = status === "Won" ? "higher" : "lower";
-  let dealerRankStatus = status !== "Won" ? "higher" : "lower";
-
+function useBannerMessage({
+  status,
+  winner,
+  playerRankStatus,
+  dealerRankStatus,
+  playerRank,
+  dealerRank,
+}) {
   const message = (
     <div>
       <span>You {status} with the</span>
@@ -46,7 +41,7 @@ function useBannerMessage({ playerHand, dealerHand }) {
     </div>
   );
   const type = status === "Won" ? "success" : "error";
-  return { message, type, winner };
+  return { message, type };
 }
 
 export default useBannerMessage;

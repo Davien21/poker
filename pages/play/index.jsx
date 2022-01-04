@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import usePokerContract from "../../hooks/usePokerService";
 import { useAppContext } from "../../contexts/appContext";
 import { toast } from "react-toastify";
+import { determineWinner } from "../../services/pokerService";
 
 function PlayPage(props) {
   const { isConnected, setHasGameData, hasGameData } = useAppContext();
@@ -32,12 +33,55 @@ function PlayPage(props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [hasWonBet, setHasWon] = useState(false);
+  const [roundDetails, setRoundDetails] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [shouldOpenModal, setShouldOpenModal] = useState(false);
 
   const cannotSetBid = isPlaying || !playerCreditsLeft || !dealerCreditsLeft;
   const { getGameInfo, setGameCredits, placeBid, generateHands, giveReward } =
     usePokerContract();
+
+  const BannerMessage = () => {
+    const {
+      status,
+      winner,
+      playerRankStatus,
+      dealerRankStatus,
+      playerRank,
+      dealerRank,
+    } = roundDetails;
+    console.log({ roundDetails });
+    const message = (
+      <div>
+        <span>You {status} with the</span>
+        {status === "Tie" && (
+          <>
+            <span className="mx-1">Dealer.</span>
+            <div>
+              <span>You both had an Equal</span>
+              <span className="underline">{playerRank}</span>
+            </div>
+          </>
+        )}
+        <span className="mx-1 underline">{playerRank}</span>
+        {status !== "Tie" && !winner.includes("tie") && (
+          <>
+            <span className="mr-1">
+              hand!, which is {playerRankStatus} ranked than the {`Dealer's`}
+            </span>
+            <span className="underline">{dealerRank}</span>
+          </>
+        )}
+        {status !== "Tie" && winner.includes("tie") && (
+          <>
+            <span className="">hand!, the Dealer also had a</span>
+            <span className="underline mx-1">{dealerRank}</span>
+            <span>but {dealerRankStatus} ranked.</span>
+          </>
+        )}
+      </div>
+    );
+  };
   const handleSelectAmount = async (amount) => {
     const didSetAmount = await setGameCredits(amount);
     if (didSetAmount) {
@@ -93,21 +137,82 @@ function PlayPage(props) {
     if (playerWon) setHasWon(true);
   };
 
+  const getWinner = () => {
+    const outcome = determineWinner(playerHand, dealerHand);
+    const { playerRank, dealerRank, winner } = outcome;
+
+    let status = winner.includes("player") ? "Won" : "Lost";
+
+    if (winner.includes("player") === "player") status = "Won";
+    if (winner === "dealer") status = "Lost";
+    if (winner === "tie") status = "Tied";
+
+    let playerRankStatus = status === "Won" ? "higher" : "lower";
+    let dealerRankStatus = status !== "Won" ? "higher" : "lower";
+
+    const type = status === "Won" ? "success" : "error";
+    return {
+      status,
+      winner,
+      type,
+      playerRankStatus,
+      dealerRankStatus,
+      playerRank,
+      dealerRank,
+    };
+  };
+
   const revealDealerHand = () => {
     setDealerHand(hiddenDealerHand);
-    const { message, type, winner } = useBannerMessage({
-      playerHand: playerHand,
-      dealerHand: dealerHand,
-    });
-
+    const {
+      status,
+      winner,
+      type,
+      playerRankStatus,
+      dealerRankStatus,
+      playerRank,
+      dealerRank,
+    } = getWinner();
     rewardWinner(winner);
-    banner[type](message, () => {
+
+    const BannerMessage = () => (
+      <div>
+        <span>You {status} with the</span>
+        {status === "Tie" && (
+          <>
+            <span className="mx-1">Dealer.</span>
+            <div>
+              <span>You both had an Equal</span>
+              <span className="underline">{playerRank}</span>
+            </div>
+          </>
+        )}
+        <span className="mx-1 underline">{playerRank}</span>
+        {status !== "Tie" && !winner.includes("tie") && (
+          <>
+            <span className="mr-1">
+              hand!, which is {playerRankStatus} ranked than the {`Dealer's`}
+            </span>
+            <span className="underline">{dealerRank}</span>
+          </>
+        )}
+        {status !== "Tie" && winner.includes("tie") && (
+          <>
+            <span className="">hand!, the Dealer also had a</span>
+            <span className="underline mx-1">{dealerRank}</span>
+            <span>but {dealerRankStatus} ranked.</span>
+          </>
+        )}
+      </div>
+    );
+    banner[type](<BannerMessage />, () => {
       setIsPlaying(false);
       resetPlay();
       setHasWon(false);
       if (playerBalance === 0 || dealerBalance === 0) {
         setIsGameOver(true);
       }
+      setRoundDetails(false);
     });
   };
 
