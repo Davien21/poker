@@ -5,11 +5,9 @@ import "tailwindcss/tailwind.css";
 
 import "../index.css";
 import { Loader, Banner } from "../components";
-import { AppProvider, useAppContext } from "../contexts/appContext";
+import { AppProvider } from "../contexts/appContext";
 
 function MyApp({ Component, pageProps }) {
-  const [openSideBar, setOpenSideBar] = useState(false);
-
   return (
     <>
       <ToastContainer position="top-center" autoClose={3000} />
