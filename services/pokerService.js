@@ -1,10 +1,4 @@
-import {
-  denominations,
-  points,
-  suits,
-  ranks,
-  hiddenHand,
-} from "../utils/constants";
+import { denominations, points, suits, ranks } from "../utils/constants";
 import { nanoid } from "nanoid";
 import {
   getCurrentNetwork,
@@ -55,7 +49,7 @@ function isRoyalFlush(hand) {
   hand = hand.map((item) => (item = item?.denomination));
   const royalFlushValues = ["K", "Q", "J", "A"];
   for (let i = 0; i < royalFlushValues.length; i++) {
-    if (!hand.includes(royalFlushValues[i])) hand = hiddenHand;
+    if (!hand.includes(royalFlushValues[i])) return false;
   }
   return true;
 }
@@ -64,9 +58,9 @@ function isStraightFlush(hand) {
   if (!hand) hand = hiddenHand;
   for (let i = 0; i < hand.length; i++) {
     if (i === hand.length - 1) break;
-    if (hand[i].suit !== hand[i + 1].suit) hand = hiddenHand;
+    if (hand[i].suit !== hand[i + 1].suit) return false;
     if (points[hand[i].denomination] + 1 !== points[hand[i + 1].denomination])
-      hand = hiddenHand;
+      return false;
   }
   return true;
 }
@@ -83,7 +77,7 @@ function isFourOfAKind(hand) {
   let countValues = Object.values(denominationCounts);
   if (countValues.filter((value) => value === 4).length) return true;
 
-  hand = hiddenHand;
+  return false;
 }
 
 function isFullHouse(hand) {
@@ -99,14 +93,14 @@ function isFullHouse(hand) {
   for (let i = 0; i < denominations.length; i++) {
     if (denominationCounts[denominations[i]] === 4) return true;
   }
-  hand = hiddenHand;
+  return false;
 }
 
 function isFlush(hand) {
   if (!hand) hand = hiddenHand;
   for (let i = 0; i < hand.length; i++) {
     if (i === hand.length - 1) break;
-    if (hand[i].suit !== hand[i + 1].suit) hand = hiddenHand;
+    if (hand[i].suit !== hand[i + 1].suit) return false;
   }
   return true;
 }
@@ -116,7 +110,7 @@ function isStraight(hand) {
   for (let i = 0; i < hand.length; i++) {
     if (i === hand.length - 1) break;
     if (points[hand[i].denomination] + 1 !== points[hand[i + 1].denomination])
-      hand = hiddenHand;
+      return false;
   }
   return true;
 }
@@ -134,7 +128,7 @@ function isThreeofAKind(hand) {
   let countValues = Object.values(denominationCounts);
   if (countValues.filter((value) => value === 3).length) return true;
 
-  hand = hiddenHand;
+  return false;
 }
 
 function isTwoPairs(hand) {
@@ -150,7 +144,7 @@ function isTwoPairs(hand) {
   let countValues = Object.values(denominationCounts);
   if (countValues.filter((value) => value === 2).length === 2) return true;
 
-  hand = hiddenHand;
+  return false;
 }
 
 function isPair(hand) {
@@ -162,7 +156,7 @@ function isPair(hand) {
       if (hand[i].denomination === hand[i + 1].denomination) return true;
   }
 
-  hand = hiddenHand;
+  return false;
 }
 
 const pokerHands = [
@@ -214,7 +208,7 @@ const determineWinner = (playerHand, dealerHand) => {
 };
 
 async function getGameDetails() {
-  if (!hasEthereum()) hand = hiddenHand;
+  if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
   if (network && network !== "maticmum")
     throw new Error("Please use Mumbai Testnet");
@@ -245,7 +239,7 @@ async function getGameDetails() {
 }
 
 async function setPlayerAmount(amount) {
-  if (!hasEthereum()) hand = hiddenHand;
+  if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
   if (network && network !== "maticmum")
     throw new Error("Please use Mumbai Testnet");
@@ -258,7 +252,7 @@ async function setPlayerAmount(amount) {
 }
 
 async function placeBet(amount) {
-  if (!hasEthereum()) hand = hiddenHand;
+  if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
   if (network && network !== "maticmum")
     throw new Error("Please use Mumbai Testnet");
@@ -271,7 +265,7 @@ async function placeBet(amount) {
 }
 
 async function saveHands() {
-  if (!hasEthereum()) hand = hiddenHand;
+  if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
   if (network && network !== "maticmum")
     throw new Error("Please use Mumbai Testnet");
@@ -290,7 +284,7 @@ async function saveHands() {
 }
 
 async function rewardWinner(winner) {
-  if (!hasEthereum()) hand = hiddenHand;
+  if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
   if (network && network !== "maticmum")
     throw new Error("Please use Mumbai Testnet");
