@@ -9,6 +9,7 @@ import {
 } from "../services/pokerService";
 import { toast } from "react-toastify";
 import Emitter from "../services/emitter";
+import { saveJSONToIPFS } from "../services/ipfs";
 
 function usePokerContract() {
   const getGameInfo = async () => {
@@ -22,7 +23,13 @@ function usePokerContract() {
     }
   };
 
-  const setGameCredits = async (amount) => {
+  const setGameCredits = async (amount, ipfs) => {
+    console.log(ipfs);
+    const store = { playerAmount: amount, dealerAmount: amount };
+    if (!ipfs) {
+      const ipfsResponse = saveJSONToIPFS(store);
+      hash = ipfsResponse.data.IpfsHash;
+    }
     Emitter.emit("OPEN_LOADER");
     try {
       await setPlayerAmount(amount);

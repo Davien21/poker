@@ -207,14 +207,13 @@ const determineWinner = (playerHand, dealerHand) => {
 async function getGameDetails() {
   if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
-  if (network && network !== "maticmum")
-    throw new Error("Please use Mumbai Testnet");
+  if (network && network !== "Aurora testnet")
+    throw new Error("Please use Aurora testnet");
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
   const pokerContract = await getPokerGameContract(signer);
-  console.log(pokerContract);
   let [
     playerCurrentAmount,
     dealerCurrentAmount,
@@ -235,11 +234,40 @@ async function getGameDetails() {
   };
 }
 
+async function getGameStats() {
+  let numberOfGames = 0;
+  let numberOfWins = 0;
+  let numberOfLosses = 0;
+  let numberOfDraws = 0;
+  if (!hasEthereum()) return false;
+  const network = await getCurrentNetwork();
+  if (network && network !== "Aurora testnet")
+    throw new Error("Please use Aurora testnet");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const address = getActiveWallet();
+  const pokerContract = await getPokerGameContract(signer);
+  const IPFSHash = await pokerContract.ipfsHashOfPlayerDetails(address);
+  console.log(IPFSHash);
+  // const numberOfGames = 11;
+  // const numberOfWins = 3;
+  // const numberOfLosses = 7;
+  // const numberOfDraws = 1;
+
+  return {
+    numberOfGames,
+    numberOfWins,
+    numberOfLosses,
+    numberOfDraws,
+  };
+}
+
 async function setPlayerAmount(amount) {
   if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
-  if (network && network !== "maticmum")
-    throw new Error("Please use Mumbai Testnet");
+  if (network && network !== "Aurora testnet")
+    throw new Error("Please use Aurora testnet");
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -251,8 +279,8 @@ async function setPlayerAmount(amount) {
 async function placeBet(amount) {
   if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
-  if (network && network !== "maticmum")
-    throw new Error("Please use Mumbai Testnet");
+  if (network && network !== "Aurora testnet")
+    throw new Error("Please use Aurora testnet");
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -264,8 +292,8 @@ async function placeBet(amount) {
 async function saveHands() {
   if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
-  if (network && network !== "maticmum")
-    throw new Error("Please use Mumbai Testnet");
+  if (network && network !== "Aurora testnet")
+    throw new Error("Please use Aurora testnet");
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -283,8 +311,8 @@ async function saveHands() {
 async function rewardWinner(winner) {
   if (!hasEthereum()) return false;
   const network = await getCurrentNetwork();
-  if (network && network !== "maticmum")
-    throw new Error("Please use Mumbai Testnet");
+  if (network && network !== "Aurora testnet")
+    throw new Error("Please use Aurora testnet");
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -304,4 +332,5 @@ export {
   placeBet,
   saveHands,
   rewardWinner,
+  getGameStats,
 };

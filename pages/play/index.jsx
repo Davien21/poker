@@ -21,6 +21,7 @@ import { determineWinner } from "../../services/pokerService";
 function PlayPage(props) {
   const { isConnected, setHasGameData, hasGameData } = useAppContext();
   const [playerHand, setPlayerHand] = useState(hiddenHand);
+  const [playerIPFS, setPlayerIPFS] = useState(hiddenHand);
   const [hiddenDealerHand, setHiddenDealerHand] = useState(hiddenHand);
   const [dealerHand, setDealerHand] = useState(hiddenHand);
   const [amount, setAmount] = useState(null);
@@ -81,8 +82,9 @@ function PlayPage(props) {
       </div>
     );
   };
+
   const handleSelectAmount = async (amount) => {
-    const didSetAmount = await setGameCredits(amount);
+    const didSetAmount = await setGameCredits(amount, playerIPFS);
     if (didSetAmount) {
       toast.success(`Game Credits set to $${amount}`);
       setAmount(amount);
@@ -180,7 +182,7 @@ function PlayPage(props) {
         {status === "Tie" && (
           <>
             <span className="mx-1">Dealer.</span>
-            <div>
+              <div>
               <span>You both had an Equal</span>
               <span className="underline">{playerRank}</span>
             </div>
@@ -216,7 +218,9 @@ function PlayPage(props) {
   };
 
   const setupGame = useCallback(async () => {
-    const { playerCurrentAmount, dealerCurrentAmount } = await getGameInfo();
+    const { playerCurrentAmount, dealerCurrentAmount, playerIPFSDetails } =
+      await getGameInfo();
+    setPlayerIPFS(playerIPFSDetails);
     setAmount(playerCurrentAmount);
     setPlayerBalance(playerCurrentAmount);
     setPlayerCreditsLeft(playerCurrentAmount);
@@ -230,6 +234,7 @@ function PlayPage(props) {
         if (window.ethereum) {
           await setupGame();
           setHasGameData(true);
+          // await setGameCredits(100, playerIPFS)
         }
       })();
     }
@@ -328,7 +333,7 @@ function PlayPage(props) {
           </section>
         )}
 
-        {amount > 0 && (
+        {amount && amount > 0 && (
           <section className="hidden md:block container">
             <div className="flex justify-between  xl:grid-cols-7">
               <div className="xl:col-span-5 mx-auto xl:mx-0">

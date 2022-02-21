@@ -1,15 +1,28 @@
 import Head from "next/head";
-import React from "react";
-import { pokerArt1, pokerArt2, pokerArt3 } from "../assets/images/jpgs";
+import React, { useEffect, useState } from "react";
+import { pokerArt1, pokerArt3 } from "../assets/images/jpgs";
 import styles from "./index-page.module.css";
 import Image from "next/image";
 import { Button, WalletButton } from "../components";
 import Link from "next/link";
 import { useAppContext } from "../contexts/appContext";
+import { getGameStats } from "../services/pokerService";
 
 function IndexPage() {
   const { isConnected } = useAppContext();
+  const [gameStats, setGameStats] = useState({
+    numberOfGames: 0,
+    numberOfWins: 0,
+    numberOfLosses: 0,
+    numberOfDraws: 0,
+  });
 
+  useEffect(() => {
+    (async () => {
+      const stats = await getGameStats();
+      setGameStats(stats);
+    })();
+  }, []);
   return (
     <>
       <Head>
@@ -32,7 +45,7 @@ function IndexPage() {
               </span>
             </h1>
             <p className="mb-10 text-white text-xl">
-              A beautiful game of poker on the Blockchain.
+              A beautiful game of poker on the Aurora Blockchain.
             </p>
             <div className={`bg-white`}>
               <div className={`${styles["title"]} bg-purple-700`}>
@@ -55,15 +68,21 @@ function IndexPage() {
               <div className="md:col-start-2 md:col-end-4 xl:col-start-2 xl:col-end-3 mb-16 text- center">
                 <div className="flex justify-between text-white">
                   <div className={`${styles["stats"]} px-4`}>
-                    <span className="block text-2xl">15</span>
+                    <span className="block text-2xl">
+                      {gameStats.numberOfGames}
+                    </span>
                     <span className="block">Games Played</span>
                   </div>
                   <div className={`${styles["stats"]} px-4`}>
-                    <span className="block text-2xl">30</span>
+                    <span className="block text-2xl">
+                      {gameStats.numberOfWins}
+                    </span>
                     <span className="block">Games Won</span>
                   </div>
                   <div className={`${styles["stats"]} px-4`}>
-                    <span className="block text-2xl">3</span>
+                    <span className="block text-2xl">
+                      {gameStats.numberOfDraws}
+                    </span>
                     <span className="block">Ties</span>
                   </div>
                 </div>

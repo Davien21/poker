@@ -34,8 +34,11 @@ export async function getCurrentNetwork() {
   if (!hasEthereum()) return false;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const network = (await signer.provider._networkPromise).name;
-  return network;
+  let network = await signer.provider._networkPromise;
+  if (network.chainId === 1313161555) {
+    network.name = "Aurora testnet";
+  }
+  return network.name;
 }
 
 export function listenToAccountChanges(handler) {
@@ -52,10 +55,10 @@ export function listenToNetworkChanges(handler) {
   window.ethereum.on("chainChanged", async () => {
     const network = await getCurrentNetwork();
     console.log({ network });
-    if (network && network !== "mumbai") {
-      return toast.error("Please Switch to the Mumbai Test Network");
+    if (network && network !== "Aurora testnet") {
+      return toast.error("Please Switch to the Aurora testnet");
     } else {
-      toast.success("You successfully switched to the Rinkeby Test Network");
+      toast.success("You successfully switched to the Aurora testnet");
       // handler(network);
     }
   });

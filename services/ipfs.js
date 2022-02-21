@@ -20,4 +20,20 @@ const saveJSONToIPFS = async (data) => {
   }
 };
 
-export { saveJSONToIPFS };
+const getJSONFromIPFS = async (ipfshash) => {
+  try {
+    const url = `https://gateway.pinata.cloud/ipfs/${ipfshash}`;
+    let response = await axios.get(url);
+    return response;
+  } catch (error) {
+    console.log(error);
+    toast.error("Something went wrong!");
+  }
+};
+
+const deleteOldIPFSData = async (data) => {
+  try {
+  } catch (error) {}
+};
+
+export { saveJSONToIPFS, getJSONFromIPFS };

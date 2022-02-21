@@ -89,9 +89,7 @@ export function AppProvider({ children }) {
   }, [handleWalletConnect, isInitiallyFetched]);
 
   useEffect(() => {
-    // console.log({ hasGameData });
-    // if (!hasGameData) return Emitter.emit("OPEN_LOADER");
-    // return Emitter.emit("CLOSE_LOADER");
+ 
   }, [hasGameData]);
 
   return (
